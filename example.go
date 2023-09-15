@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"github.com/yashwant-shrivastava/ratelimiter/leaky_bucket"
 	"github.com/yashwant-shrivastava/ratelimiter/token_bucket"
 	"time"
 )
 
-func main() {
+func TokenBucketRateLimiterExample() {
 	burstCapacity := 10
 	refillRate := 5
 	refillInterval := 1 * time.Second
@@ -35,4 +36,28 @@ func main() {
 		}
 		time.Sleep(time.Millisecond * 100) // to simulate real request scenario
 	}
+}
+
+func LeakyBucketRateLimiterExample() {
+	rate := 1
+	maxBucketCapacity := 10
+	refillRate := time.Second
+
+	limiter := leaky_bucket.NewLeakyBucketRateLimiter(rate, maxBucketCapacity, refillRate)
+
+	go func() {
+		for true {
+			req := limiter.ConsumeRequest()
+			fmt.Println("Request received ", req)
+		}
+	}()
+	// Simulate event messages
+	for i := 0; i < 150; i++ {
+		limiter.AddRequest(i)
+	}
+}
+
+func main() {
+	TokenBucketRateLimiterExample()
+	LeakyBucketRateLimiterExample()
 }
