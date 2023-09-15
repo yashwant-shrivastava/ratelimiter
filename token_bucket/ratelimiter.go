@@ -72,9 +72,9 @@ func (rl *TokenBucketEventRateLimiter) AllowRequest() bool {
 	}
 }
 
-func (rl *TokenBucketEventRateLimiter) AllowMessage() bool {
+func (rl *TokenBucketEventRateLimiter) AllowMessage() {
 	select {
 	case <-rl.tokens:
-		return true
+		return
 	}
 }

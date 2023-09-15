@@ -8,16 +8,16 @@ type Request struct {
 
 type LeakyBucketRateLimiter struct {
 	rate              int
-	refillDuration    time.Duration
+	duration          time.Duration
 	queue             chan Request
 	maxBucketCapacity int
 }
 
-func NewLeakyBucketRateLimiter(rate int, maxBucketCapacity int, refillDuration time.Duration) *LeakyBucketRateLimiter {
+func NewLeakyBucketRateLimiter(rate int, maxBucketCapacity int, duration time.Duration) *LeakyBucketRateLimiter {
 	return &LeakyBucketRateLimiter{
-		rate:           rate,
-		queue:          make(chan Request, maxBucketCapacity),
-		refillDuration: refillDuration,
+		rate:     rate,
+		queue:    make(chan Request, maxBucketCapacity),
+		duration: duration,
 	}
 }
 
@@ -28,7 +28,7 @@ func (l *LeakyBucketRateLimiter) AddRequest(req int) {
 }
 
 func (l *LeakyBucketRateLimiter) ConsumeRequest() Request {
-	ticker := time.NewTicker(l.refillDuration / time.Duration(l.rate))
+	ticker := time.NewTicker(l.duration / time.Duration(l.rate))
 	defer ticker.Stop()
 
 	select {
