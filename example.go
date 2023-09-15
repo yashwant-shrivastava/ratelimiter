@@ -118,9 +118,9 @@ func SlidingWindowCounterRateLimiterExample() {
 }
 
 func main() {
-	//TokenBucketRateLimiterExample()
-	//LeakyBucketRateLimiterExample()
-	//FixedWindowRateLimiterExample()
-	//SlidingWindowLogRateLimiterExample()
+	TokenBucketRateLimiterExample()
+	LeakyBucketRateLimiterExample()
+	FixedWindowRateLimiterExample()
+	SlidingWindowLogRateLimiterExample()
 	SlidingWindowCounterRateLimiterExample()
 }
