@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/yashwant-shrivastava/ratelimiter/fixed_window"
 	"github.com/yashwant-shrivastava/ratelimiter/leaky_bucket"
+	"github.com/yashwant-shrivastava/ratelimiter/sliding_window_counter"
 	"github.com/yashwant-shrivastava/ratelimiter/sliding_window_log"
 	"github.com/yashwant-shrivastava/ratelimiter/token_bucket"
 	"time"
@@ -82,7 +83,7 @@ func FixedWindowRateLimiterExample() {
 	}
 }
 
-func SlidingWindowLogRateLimiter() {
+func SlidingWindowLogRateLimiterExample() {
 	windowDuration := time.Second
 	maxRequest := 10
 
@@ -99,9 +100,27 @@ func SlidingWindowLogRateLimiter() {
 
 }
 
+func SlidingWindowCounterRateLimiterExample() {
+	limiter := sliding_window_counter.NewSlidingWindowCounterRateLimiter(
+		10*time.Second,
+		time.Second,
+		10,
+	)
+	//Simulate request messages
+	for i := 0; i < 150; i++ {
+		if limiter.AllowRequest() {
+			fmt.Println("Request allowed ", i, time.Now().Unix())
+		} else {
+			fmt.Println("Request discarded", i, time.Now().Unix())
+		}
+		time.Sleep(time.Millisecond * 10)
+	}
+}
+
 func main() {
 	//TokenBucketRateLimiterExample()
 	//LeakyBucketRateLimiterExample()
 	//FixedWindowRateLimiterExample()
-	SlidingWindowLogRateLimiter()
+	//SlidingWindowLogRateLimiterExample()
+	SlidingWindowCounterRateLimiterExample()
 }
